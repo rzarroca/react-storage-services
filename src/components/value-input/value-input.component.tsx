@@ -1,7 +1,7 @@
 // Vendors
-import React, { FC } from 'react'
+import { FC, FormEvent } from 'react'
 // Types
-import { ValuesType } from 'components/form/form.component'
+import { ValuesType } from 'containers/form/form.component'
 
 type ValueInputComponentPropsType = {
   id: keyof ValuesType
@@ -14,7 +14,7 @@ const ValueInputComponent: FC<ValueInputComponentPropsType> = ({
   onClick,
   label
 }) => {
-  const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const value = data.get(id) as string
@@ -26,7 +26,9 @@ const ValueInputComponent: FC<ValueInputComponentPropsType> = ({
     <form className="grid gap-1" onSubmit={handleOnSubmit}>
       <label htmlFor={id}>{label}</label>
       <input type="text" name={id} id={id} className="border" />
-      <button className="rounded-sm bg-slate-400 px-5">Send</button>
+      <button className="rounded-sm bg-slate-400 px-5">
+        `Update ${label}`
+      </button>
     </form>
   )
 }

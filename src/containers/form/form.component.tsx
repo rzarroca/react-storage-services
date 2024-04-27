@@ -1,5 +1,5 @@
 // Vendors
-import React, { FC } from 'react'
+import { FC, useState } from 'react'
 // Components
 import ValueInputComponent from 'components/value-input'
 import ValueBoardComponent from 'components/value-board'
@@ -10,7 +10,7 @@ export type ValuesType = {
 }
 
 const FormComponent: FC = () => {
-  const [values, setValues] = React.useState<ValuesType>({
+  const [values, setValues] = useState<ValuesType>({
     firstValue: '',
     secondValue: ''
   })
@@ -23,7 +23,7 @@ const FormComponent: FC = () => {
       <header className="text-center">
         <h2 className="text-lg">Form Test</h2>
         <ValueBoardComponent label="First Value" value={values.firstValue} />
-        <ValueBoardComponent label="First Value" value={values.secondValue} />
+        <ValueBoardComponent label="Second Value" value={values.secondValue} />
       </header>
 
       <ValueInputComponent
