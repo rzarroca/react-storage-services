@@ -1,43 +1,30 @@
 // Vendors
-import { FC, useState } from 'react'
+import { FC } from 'react'
 // Components
 import ValueInputComponent from 'components/value-input'
 import ValueBoardComponent from 'components/value-board'
-
-export type ValuesType = {
-  firstValue: string
-  secondValue: string
-}
+// Contexts
+import { ValuesContextProvider } from 'contexts/values.context'
 
 const FormComponent: FC = () => {
-  const [values, setValues] = useState<ValuesType>({
-    firstValue: '',
-    secondValue: ''
-  })
-
-  const handleUpdateValue = (value: string, id: string) => {
-    setValues({ ...values, [id]: value })
-  }
   return (
-    <article className="grid gap-3">
-      <header className="text-center">
-        <h2 className="text-lg">Form Test</h2>
-        <ValueBoardComponent label="First Value" value={values.firstValue} />
-        <ValueBoardComponent label="Second Value" value={values.secondValue} />
-      </header>
+    <ValuesContextProvider>
+      <article className="grid gap-3">
+        <header className="border border-gray-200 p-8">
+          <h3 className="text-lg">Form Test Component</h3>
+          <ValueBoardComponent label="First Value" value={'firstValue'} />
+          <ValueBoardComponent label="Second Value" value={'secondValue'} />
+        </header>
 
-      <ValueInputComponent
-        id="firstValue"
-        onClick={handleUpdateValue}
-        label="Update First Value"
-      />
-
-      <ValueInputComponent
-        id="secondValue"
-        onClick={handleUpdateValue}
-        label="Update Second Value"
-      />
-    </article>
+        <div className="border border-gray-200 p-8">
+          <header>
+            <h3 className="text-lg">Form Updaters Components</h3>
+          </header>
+          <ValueInputComponent id="firstValue" label="Update First Value" />
+          <ValueInputComponent id="secondValue" label="Update Second Value" />
+        </div>
+      </article>
+    </ValuesContextProvider>
   )
 }
 

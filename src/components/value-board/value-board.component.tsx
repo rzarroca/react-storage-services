@@ -1,20 +1,21 @@
 // Vendors
 import { FC } from 'react'
 // Types
-import { ValuesType } from 'containers/form/form.component'
+import { ValuesType, useValuesContext } from 'contexts/values.context'
 
 type ValueBoardComponentPropsType = {
   label: string
-  value: ValuesType[keyof ValuesType]
+  value: keyof ValuesType
 }
 
 const ValueBoardComponent: FC<ValueBoardComponentPropsType> = ({
   label,
   value
 }) => {
+  const { values } = useValuesContext()
   return (
-    <p data-testId={label}>
-      {label}: {value || 'no value'}
+    <p className="border border-gray-200 p-8 text-center" data-testId={label}>
+      {label}: {values[value] || 'no value'}
     </p>
   )
 }
