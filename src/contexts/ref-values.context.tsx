@@ -5,9 +5,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useRef,
-  useState
+  useSyncExternalStore
 } from 'react'
 
 export type StoreType = {
@@ -19,17 +18,17 @@ type CallbackFunction = VoidFunction
 type UnsubscribeFunction = VoidFunction
 
 type useStoreReturnType = {
-  store: () => StoreType
-  setStore: (value: Partial<StoreType>) => void
+  get: () => StoreType
+  set: (value: Partial<StoreType>) => void
   subscribe: (listener: CallbackFunction) => UnsubscribeFunction
 }
 
-const useStore = (initialValues: StoreType): useStoreReturnType => {
+const useStoreContext = (initialValues: StoreType): useStoreReturnType => {
   const refstore = useRef<StoreType>(initialValues)
   const listeners = useRef(new Set<CallbackFunction>())
 
-  const store = useCallback(() => refstore.current, [])
-  const setStore = useCallback((value: Partial<StoreType>) => {
+  const get = useCallback(() => refstore.current, [])
+  const set = useCallback((value: Partial<StoreType>) => {
     refstore.current = { ...refstore.current, ...value }
     listeners.current.forEach((listener) => listener())
   }, [])
@@ -39,24 +38,24 @@ const useStore = (initialValues: StoreType): useStoreReturnType => {
   }, [])
 
   return {
-    store,
-    setStore,
+    get,
+    set,
     subscribe
   } as const
 }
 
-const StoreContext = createContext<ReturnType<typeof useStore> | null>(null)
+const StoreContext = createContext<ReturnType<typeof useStoreContext> | null>(
+  null
+)
 
-const StoreContextProvider: FC<
-  PropsWithChildren<{ initialValues?: StoreType }>
-> = ({
+const StoreProvider: FC<PropsWithChildren<{ initialValues?: StoreType }>> = ({
   initialValues = {
     firstValue: '',
     secondValue: ''
   },
   children
 }) => (
-  <StoreContext.Provider value={useStore(initialValues)}>
+  <StoreContext.Provider value={useStoreContext(initialValues)}>
     <div className="border border-gray-200 p-8">
       <h2 className=" text-xl">Context Provider</h2>
       {children}
@@ -64,20 +63,13 @@ const StoreContextProvider: FC<
   </StoreContext.Provider>
 )
 
-const useStoreContext = () => {
+const useStore = () => {
   const context = useContext(StoreContext)
   if (!context) {
-    throw new Error(
-      'useStoreContext must be used within a StoreContextProvider'
-    )
+    throw new Error('useStore must be used within a StoreProvider')
   }
-  const [state, setState] = useState<StoreType>(context.store())
-  useEffect(() => {
-    const unsubscribe = context.subscribe(() => setState(context.store()))
-    return () => unsubscribe()
-  })
-
-  return [state, context.setStore] as const
+  const state = useSyncExternalStore(context.subscribe, context.get)
+  return [state, context.set] as const
 }
 
-export { StoreContextProvider, useStoreContext }
+export { StoreProvider, useStore }

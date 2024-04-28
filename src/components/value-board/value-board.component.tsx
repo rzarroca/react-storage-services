@@ -1,7 +1,7 @@
 // Vendors
 import { FC } from 'react'
 // Types
-import { StoreType, useStoreContext } from 'contexts/ref-values.context'
+import { StoreType, useStore } from 'contexts/ref-values.context'
 
 type ValueBoardComponentPropsType = {
   label: string
@@ -12,7 +12,7 @@ const ValueBoardComponent: FC<ValueBoardComponentPropsType> = ({
   label,
   value
 }) => {
-  const [values] = useStoreContext()
+  const [values] = useStore()
   return (
     <p className="border border-gray-200 p-8 text-center" data-testid={label}>
       {label}: {values[value] || 'no value'}

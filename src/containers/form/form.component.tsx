@@ -4,11 +4,11 @@ import { FC } from 'react'
 import ValueInputComponent from 'components/value-input'
 import ValueBoardComponent from 'components/value-board'
 // Contexts
-import { StoreContextProvider } from 'contexts/ref-values.context'
+import { StoreProvider } from 'contexts/ref-values.context'
 
 const FormComponent: FC = () => {
   return (
-    <StoreContextProvider>
+    <StoreProvider>
       <article className="grid gap-3">
         <header className="border border-gray-200 p-8">
           <h3 className="text-lg">Form Test Component</h3>
@@ -24,7 +24,7 @@ const FormComponent: FC = () => {
           <ValueInputComponent id="secondValue" label="Update Second Value" />
         </div>
       </article>
-    </StoreContextProvider>
+    </StoreProvider>
   )
 }
 

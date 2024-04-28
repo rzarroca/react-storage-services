@@ -1,7 +1,7 @@
 // Vendors
 import { FC, FormEvent } from 'react'
 // Types
-import { StoreType, useStoreContext } from 'contexts/ref-values.context'
+import { StoreType, useStore } from 'contexts/ref-values.context'
 
 type ValueInputComponentPropsType = {
   id: keyof StoreType
@@ -12,7 +12,7 @@ const ValueInputComponent: FC<ValueInputComponentPropsType> = ({
   id,
   label
 }) => {
-  const [values, setValues] = useStoreContext()
+  const [values, setValues] = useStore()
 
   const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
