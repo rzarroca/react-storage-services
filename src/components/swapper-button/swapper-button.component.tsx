@@ -20,7 +20,7 @@ const SwapperButtonComponent: FC = () => {
       onClick={handleClick}
       className="w-full rounded-sm bg-slate-400 px-5"
     >
-      Switch Context
+      Switch Values
     </button>
   )
 }

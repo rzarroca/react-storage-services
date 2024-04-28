@@ -18,9 +18,10 @@ export default function createRefContext<StoreType extends object>(
   type SetStoreValueType =
     | Partial<StoreType>
     | ((prevState: StoreType) => Partial<StoreType>)
+  type DispatchState = (value: SetStoreValueType) => void
   type useStoreReturnType = {
     get: () => StoreType
-    set: (value: SetStoreValueType) => void
+    set: DispatchState
     subscribe: (listener: CallbackFunction) => UnsubscribeFunction
   }
 
@@ -63,7 +64,7 @@ export default function createRefContext<StoreType extends object>(
 
   function useStore<SelectorOutput>(
     selector: (store: StoreType) => SelectorOutput
-  ): [SelectorOutput, (value: SetStoreValueType) => void] {
+  ): [SelectorOutput, DispatchState] {
     const store = useContext(StoreContext)
     if (!store) {
       throw new Error('useStore must be used inside StoreProvider')
