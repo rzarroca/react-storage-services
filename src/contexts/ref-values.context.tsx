@@ -63,13 +63,19 @@ const StoreProvider: FC<PropsWithChildren<{ initialValues?: StoreType }>> = ({
   </StoreContext.Provider>
 )
 
-const useStore = () => {
-  const context = useContext(StoreContext)
-  if (!context) {
-    throw new Error('useStore must be used within a StoreProvider')
+function useStore<SelectorOutput>(
+  selector: (store: StoreType) => SelectorOutput
+): [SelectorOutput, (value: Partial<StoreType>) => void] {
+  const store = useContext(StoreContext)
+  if (!store) {
+    throw new Error('useStore must be used inside StoreProvider')
   }
-  const state = useSyncExternalStore(context.subscribe, context.get)
-  return [state, context.set] as const
+
+  const state = useSyncExternalStore(store.subscribe, () =>
+    selector(store.get())
+  )
+
+  return [state, store.set] as const
 }
 
 export { StoreProvider, useStore }
