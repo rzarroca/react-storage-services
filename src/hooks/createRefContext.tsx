@@ -9,13 +9,18 @@ import {
   useSyncExternalStore
 } from 'react'
 
-export default function createRefContext<StoreType>(initialState: StoreType) {
-  type CallbackFunction = VoidFunction
-  type UnsubscribeFunction = VoidFunction
+type CallbackFunction = VoidFunction
+type UnsubscribeFunction = VoidFunction
 
+export default function createRefContext<StoreType extends object>(
+  initialState: StoreType
+) {
+  type SetStoreValueType =
+    | Partial<StoreType>
+    | ((prevState: StoreType) => Partial<StoreType>)
   type useStoreReturnType = {
     get: () => StoreType
-    set: (value: Partial<StoreType>) => void
+    set: (value: SetStoreValueType) => void
     subscribe: (listener: CallbackFunction) => UnsubscribeFunction
   }
 
@@ -24,7 +29,10 @@ export default function createRefContext<StoreType>(initialState: StoreType) {
     const listeners = useRef(new Set<CallbackFunction>())
 
     const get = useCallback(() => refstore.current, [])
-    const set = useCallback((value: Partial<StoreType>) => {
+    const set = useCallback((value: SetStoreValueType) => {
+      if (typeof value === 'function') {
+        value = value(refstore.current)
+      }
       refstore.current = { ...refstore.current, ...value }
       listeners.current.forEach((listener) => listener())
     }, [])
@@ -55,7 +63,7 @@ export default function createRefContext<StoreType>(initialState: StoreType) {
 
   function useStore<SelectorOutput>(
     selector: (store: StoreType) => SelectorOutput
-  ): [SelectorOutput, (value: Partial<StoreType>) => void] {
+  ): [SelectorOutput, (value: SetStoreValueType) => void] {
     const store = useContext(StoreContext)
     if (!store) {
       throw new Error('useStore must be used inside StoreProvider')

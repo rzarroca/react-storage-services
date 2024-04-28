@@ -1,6 +1,7 @@
 // Vendors
 import { FC } from 'react'
 // Components
+import SwapperButtonComponent from 'components/swapper-button'
 import ValueInputComponent from 'components/value-input'
 import ValueBoardComponent from 'components/value-board'
 // Contexts
@@ -22,6 +23,13 @@ const FormComponent: FC = () => {
           </header>
           <ValueInputComponent id="firstValue" label="Update First Value" />
           <ValueInputComponent id="secondValue" label="Update Second Value" />
+        </div>
+
+        <div className="border border-gray-200 p-8">
+          <header>
+            <h3 className="text-lg">Switch Button Components</h3>
+          </header>
+          <SwapperButtonComponent />
         </div>
       </article>
     </StoreProvider>

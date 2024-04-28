@@ -122,4 +122,51 @@ describe('Containers / FormComponent', () => {
 
     expect(firstValue).toHaveTextContent('no value')
   })
+
+  test('should update first and second value if second input is: "populate"', async () => {
+    const user = userEvent.setup()
+    render(<FormComponent />)
+
+    const firstValue = screen.getByTestId(/first value/i)
+    const secondValue = screen.getByTestId(/second value/i)
+    const secondInput = screen.getByRole('textbox', { name: /second value/i })
+    const secondButton = screen.getByRole('button', {
+      name: /update second value/i
+    })
+
+    await user.type(secondInput, 'populate')
+    await user.click(secondButton)
+    expect(firstValue).toHaveTextContent('John')
+    expect(secondValue).toHaveTextContent('Doe')
+  })
+
+  test('should swap the values if Switch Context is clicked', async () => {
+    const user = userEvent.setup()
+    render(<FormComponent />)
+
+    const firstValue = screen.getByTestId(/first value/i)
+    const firstInput = screen.getByRole('textbox', { name: /first value/i })
+    const firstButton = screen.getByRole('button', {
+      name: /update first value/i
+    })
+
+    const secondValue = screen.getByTestId(/second value/i)
+    const secondInput = screen.getByRole('textbox', { name: /second value/i })
+    const secondButton = screen.getByRole('button', {
+      name: /update second value/i
+    })
+
+    await user.type(firstInput, 'first test value')
+    await user.click(firstButton)
+
+    await user.type(secondInput, 'second test value')
+    await user.click(secondButton)
+
+    const switchButton = screen.getByRole('button', {
+      name: /switch context/i
+    })
+    await user.click(switchButton)
+    expect(firstValue).toHaveTextContent('second test value')
+    expect(secondValue).toHaveTextContent('first test value')
+  })
 })

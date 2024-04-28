@@ -12,13 +12,20 @@ const ValueInputComponent: FC<ValueInputComponentPropsType> = ({
   id,
   label
 }) => {
-  const [, setValues] = useStore((store) => store[id])
+  const [, setValues] = useStore(() => null)
 
   const handleOnSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const value = data.get(id) as string
-    setValues({ [id]: value })
+    if (id === 'secondValue' && value === 'populate') {
+      setValues({
+        firstValue: 'John',
+        secondValue: 'Doe'
+      })
+    } else {
+      setValues({ [id]: value })
+    }
     event.currentTarget.reset()
   }
 
